@@ -14,7 +14,7 @@ COMPILER_FLAGS = -std=c11 -Wall
 OBJ_NAME = game
 
 # LIB_FLAGS specifies the additional library to link
-LIB_FLAGS = -L"C:\Program Files (x86)\Windows Kits\10\Lib\10.0.19041.0\um\x64\WS2_32.lib" -lwsock32 -lpthread
+LIB_FLAGS = -lpthread
 
 all : $(OBJS)
 	$(CC) $(HEADERS) $(OBJS) $(COMPILER_FLAGS) $(LIB_FLAGS) -o $(OBJ_NAME)
