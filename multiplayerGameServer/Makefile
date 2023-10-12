@@ -2,7 +2,7 @@
 OBJS = main.c
 
 # CC specifies which compiler we're using
-CC = gcc
+CC = gcc-13
 
 # Headers files
 HEADERS = server.c network.c utils.c
