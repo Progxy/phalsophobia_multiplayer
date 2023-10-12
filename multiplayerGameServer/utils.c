@@ -668,6 +668,7 @@ void playGame() {
 
         // Play every player's turn 
         for (int index = 0; index < playerCount; index++) {
+            // TODO: Check if the game has been closed otherwise you'll get some segfaults
             int playerTurn = turns[index];
 
             // Send to all the player the current info
