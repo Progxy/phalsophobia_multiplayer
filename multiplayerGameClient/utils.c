@@ -125,14 +125,14 @@ void playTurn() {
     while (TRUE) {
         // Wait to know if it's your turn
         char* temp;
-        while ((temp = getDataReceived().data) == NULL);
+        while ((temp = getDataReceived()) == NULL);
 
         // If it's not your turn wait the end of the turn
         if (!strcmp(temp, "NYT")) {
             bool endGameCondition;
             
             while (!strcmp(temp, "TT") || (endGameCondition = !strcmp(temp, "TG"))) {
-                while ((temp = getDataReceived().data) == NULL);
+                while ((temp = getDataReceived()) == NULL);
                 printf("%s", temp);
             }
 
@@ -147,7 +147,7 @@ void playTurn() {
 
         do {
             // Get the instructions from the game
-            while ((temp = getDataReceived().data) == NULL);
+            while ((temp = getDataReceived()) == NULL);
             
             // Check if the user input is needed
             if (!strcmp(temp, "UI")) {

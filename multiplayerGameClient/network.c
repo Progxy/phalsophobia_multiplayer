@@ -7,6 +7,7 @@
 #include "network.h"
 
 bool enterGame() {
+    // Init the connection to the server
     if (!initClient()) {
         printf("\nError while initializing the client!");
         return FALSE;
@@ -20,19 +21,17 @@ bool enterGame() {
     }
 
     // Wait the signal to send the player data
-    while((getDataReceived().data) == NULL);
+    while((getDataReceived()) == NULL);
 
     // Set the player info
     setPlayer();
 
     // Show game settings 
     char* temp;
-    while((temp = getDataReceived().data) == NULL);
+    while((temp = getDataReceived()) == NULL);
     printf("%s", temp);
 
     free(temp);
-
-    printf("\x1b[1;33m\n\nWait the game master to start the game...\x1b[1;0m");
 
     // Play the game
     playTurn();

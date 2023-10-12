@@ -24,7 +24,6 @@ typedef struct Player {
 
 typedef struct dataReceived {
     char* data;
-    int length;
     struct dataReceived* next;
 } dataReceived;
 

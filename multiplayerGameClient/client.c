@@ -1,15 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <WinSock2.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
 #include <string.h>
-#include <pthread.h>
+#include <unistd.h>
 #include "client.h"
 #include "utils.h"
 
 typedef struct sockaddr_in sockaddr_in;
 
-static WSADATA wsa;
-static SOCKET ServerSocket;
+static int socket_desc;
 static sockaddr_in server;
 
 static dataReceived* firstDataCollected = NULL;
@@ -25,37 +25,23 @@ bool sendData(char* message) {
 	}
 
 	// Send the message
-	if (send(ServerSocket, temp, 2500, 0) < 0) {
+	if (send(socket_desc, temp, 2500, 0) < 0) {
 		printf("\nFailed sending the message to the server!\n");
 		return FALSE;
 	}
+    
 	return TRUE;
 }
 
-int getDataReceivedLen() {
-	dataReceived* scan = firstDataCollected;
-	int dataCollectedNum = 0;
-
-	// Scan all the element in the list and count them
-	while (scan != NULL) {
-		scan = scan -> next;
-		dataCollectedNum++;
-	}
-
-	return dataCollectedNum;
-}
-
-dataReceived getDataReceived() {
+char* getDataReceived() {
 	// Check if there's something to retrive
 	if (firstDataCollected == NULL) {
 		// Return the data requested
-		dataReceived dataRequested = {NULL, 0};
-		return dataRequested;
+		return NULL;
 	}
 
 	// Get the data from the element
 	char* dataContainer = firstDataCollected -> data;
-	int dataLen = firstDataCollected -> length;
 
 	// If the first element is the last element reset both
 	if (firstDataCollected == lastDataCollected) {
@@ -63,8 +49,7 @@ dataReceived getDataReceived() {
 		firstDataCollected = NULL;
 		lastDataCollected = NULL;
 		// Return the data requested
-		dataReceived dataRequested = {dataContainer, dataLen};
-		return dataRequested;
+		return dataContainer;
 	}
 
 	// Copy the address of the first address
@@ -77,16 +62,12 @@ dataReceived getDataReceived() {
     free(temp);
 
 	// Return the data requested
-	dataReceived dataRequested = {dataContainer, dataLen};
-	return dataRequested;
+	return dataContainer;
 }
 
-static void saveDataReceived(char* dataRecv, int dataLen) {
+static void saveDataReceived(char* dataRecv) {
 	// Create a new element
 	dataReceived* newData = (dataReceived*) malloc(sizeof(dataReceived));
-
-	// Set the len of the message
-	newData -> length = dataLen + 1;
 
 	// Set the given string in the data collection
 	newData -> data = dataRecv; 
@@ -123,54 +104,30 @@ void* receiveData() {
 		return NULL;
 	}
 
-	int recv_size;
 	char* response = (char*) calloc(2500, 1);
 
-	if ((recv_size = recv(ServerSocket, response, 2500, 0)) == SOCKET_ERROR) {
-		printf("\nFailed receiving the data!\n");
-		pthread_exit(NULL);
-		return receiveData();
-	} else {	
-		response = (char*) realloc(response, strlen(response) + 1);
+	int total_received = 0, received = 0;
+	do {
+		received = recv(socket_desc, response + total_received, 2500 - total_received, 0);
+		if (received == -1) {
+			printf("\nrecv() failed.");
+			return receiveData();
+		}
 
-		// Save the data received
-		saveDataReceived(response, strlen(response));
+		if (received > 0) {
+			total_received += received;
+		}
 
-		return receiveData();
-	}
+	} while (received != 0);
+
+	// Save the data received
+	response[total_received] = 0;
+	saveDataReceived(response);
+	
 	return receiveData();
 }
 
-static SOCKET connectSocket(sockaddr_in server, char* ip, u_short port) {
-	SOCKET temp;
-
-	// Create the socket 
-	if ((temp = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET) {
-		printf("\nCould not create socket : %d\n" , WSAGetLastError());
-		return (SOCKET) NULL;
-	}
-
-	// Set the host info for connection (ip, family, port)
-	server.sin_addr.s_addr = inet_addr(ip);
-	server.sin_family = AF_INET;
-	server.sin_port = htons(port);
-
-	// Connect to the server
-	if (connect(temp, (struct sockaddr*) &server, sizeof(server)) < 0) {
-		printf("\nFailed connecting to the server!\n");
-		return (SOCKET) NULL;
-	}
-
-	return temp;
-}
-
 bool initClient() {
-	// Init winsock2 and check if fails initializing it
-	if (WSAStartup(MAKEWORD(2,2), &wsa) != 0) {
-		printf("\nFailed. Error Code : %d\n", WSAGetLastError());
-		return FALSE;
-	}
-
 	// Regex to clear the terminal.
     printf("\e[1;1H\e[2J");
 
@@ -184,21 +141,32 @@ bool initClient() {
 
 	printf("\nTrying to connect to the server at ip address: %s!\n", ip_addrs);
 
-	// Create the socket and connect it, also check for errors
-	if ((ServerSocket = connectSocket(server, ip_addrs, 8080)) == ((SOCKET) NULL)) {
+	// Create the socket 
+	if ((socket_desc = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+		printf("\nCould not create socket\n");
 		return FALSE;
 	}
 
+	// Set the host info for connection (ip, family, port)
+	server.sin_addr.s_addr = inet_addr(ip_addrs);
+	server.sin_family = AF_INET;
+	server.sin_port = htons(8080);
+
+	// Connect to the server
+	if (connect(socket_desc, (struct sockaddr*) &server, sizeof(server)) < 0) {
+		printf("\nFailed connecting to the server!\n");
+		return FALSE;
+	}
+	
 	// Regex to clear the terminal.
     printf("\e[1;1H\e[2J");
-	
-	printf("\nWaiting the game master to select the game settings!");
+
+	printf("\x1b[1;33m\nWaiting the game master to select the game settings...\x1b[1;0m");
 
 	return TRUE;
 }
 
 void closeClient() {
-	closesocket(ServerSocket);
-	WSACleanup();
+	close(socket_desc);
 	return;
 }
