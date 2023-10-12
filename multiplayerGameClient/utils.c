@@ -22,15 +22,18 @@ void setPlayer() {
     Player player = {"", INACTIVE};
 
     // Allocate the space for the player's name
-    player.playerName = (char*) malloc(225);
+    player.playerName = (char*) calloc(225, 1);
 
     // Get the player's name
     do {
         printf("\nInsert the name to use in game%s (MAX 225 characters)%s: ", colorsCodes[YELLOW], colorsCodes[DEFAULT_COLOR]);
 
+        fgets(player.playerName, 225, stdin);
+
         // Check if the input string contains the newline character
-        char *temp;
-        if ((temp = strchr(fgets((player.playerName), 225, stdin), '\n')) != NULL) {
+        char* temp = strchr(player.playerName, '\n');
+
+        if (temp!= NULL) {
             // Change the newline with the string terminator
             *temp = '\0';
 
@@ -38,7 +41,7 @@ void setPlayer() {
             player.playerName = (char*) realloc(player.playerName, strlen(player.playerName) + 1);
         } else {
             // If the input string doesn't contain the newline than clean the stdin
-            unsigned char c;
+            char c;
             while((c = getc(stdin)) != EOF) {
                 if(c == '\n') {
                     break;          
@@ -48,7 +51,7 @@ void setPlayer() {
             // Change the newline with the string terminator
             *temp = '\0';
         }
-        
+            
         // Check if the given input string is empty or not
         int isEmpty = 1;
         for (int i = 0; player.playerName[i] != '\0'; i++) {
@@ -87,7 +90,7 @@ void setPlayer() {
 
     {
         // Clean the stdin
-        unsigned char c;
+        char c;
         while ((c = getc(stdin)) != EOF) {
             if (c == '\n'){
                 break;

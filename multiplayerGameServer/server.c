@@ -4,10 +4,13 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <pthread.h>
+#include <sys/ioctl.h>
+#include <net/if.h>
 #include "server.h"
 #include "utils.h"
 
 typedef struct sockaddr_in sockaddr_in;
+typedef struct ifreq ifreq;
 
 /* -------------------- GLOBAL VARIABLES ----------------------------- */
 

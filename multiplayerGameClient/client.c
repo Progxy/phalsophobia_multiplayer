@@ -136,9 +136,11 @@ bool initClient() {
 	printf("\nInsert the ip address: ");
 	fgets(ip_addrs, 255, stdin);
 	char* temp = strchr(ip_addrs, '\n');
-	if (temp != NULL)
+	
+	if (temp != NULL) {
 		*temp = '\0';
-
+	}
+	
 	printf("\nTrying to connect to the server at ip address: %s!\n", ip_addrs);
 
 	// Create the socket 
