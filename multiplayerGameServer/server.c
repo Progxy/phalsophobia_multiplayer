@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <WinSock2.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
 #include <pthread.h>
 #include "server.h"
 #include "utils.h"
@@ -10,8 +11,8 @@ typedef struct sockaddr_in sockaddr_in;
 
 /* -------------------- GLOBAL VARIABLES ----------------------------- */
 
-static WSADATA wsa;
-static SOCKET ServerSocket, clientSockets[3];
+static int server_socket;
+static int clients_sockets[3];
 static sockaddr_in server_addr;
 static char* ip_addrs[3];
 static int clientsCount = 0;
@@ -27,13 +28,11 @@ static int threadState = ACTIVE;
 /// @param port 
 /// @param backlog 
 /// @return Return the status of the initialization.
-static SOCKET initServer(sockaddr_in server, u_short port, int backlog) {
-	SOCKET s;
-
+static bool initServer(sockaddr_in server, u_short port, int backlog) {
 	// Create a socket and check if fails creating it
-	if ((s = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET) {
-		printf("Could not create socket : %d\n", WSAGetLastError());
-		return (SOCKET) NULL;
+	if ((server_socket = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET) {
+		printf("Could not create socket!\n");
+		return FALSE;
 	}
 
 	// Set the server info (family, address, port)
@@ -42,15 +41,15 @@ static SOCKET initServer(sockaddr_in server, u_short port, int backlog) {
 	server.sin_port = htons(port);
 	
 	// Bind the socket and check if fails binding it
-	if (bind(s, (struct sockaddr*) &server, sizeof(server)) == SOCKET_ERROR) {
-		printf("\nBind failed with error code : %d\n", WSAGetLastError());
-		return (SOCKET) NULL;
+	if (bind(server_socket, (struct sockaddr*) &server, sizeof(server)) < 0) {
+		printf("\nBind failed with error code!\n");
+		return FALSE;
 	}
 
 	// Listen to incoming connections, with backlog (queue) limit of n connections
-	listen(s, backlog);
+	listen(server_socket, backlog);
 
-	return s;
+	return TRUE;
 }
 
 /// @brief Ask the user if he wants to end the search of players.
@@ -61,7 +60,7 @@ static void askToClose() {
 
 	{	
 		// Clean the stdin
-		unsigned char c;
+		char c;
 		while((c = getc(stdin)) != EOF) {
 			if(c == '\n') {
 				break;          
@@ -86,7 +85,7 @@ bool sendData(int clientIndex, char* message) {
 	sprintf(temp, "%s", message);
 
 	// Send the message
-	if (send(clientSockets[clientIndex], temp, 2500, 0) < 0) {
+	if (send(clients_sockets[clientIndex], temp, 2500, 0) < 0) {
 		free(temp);
 		printf("\nFailed sending the message to the client %d!\n", clientIndex + 1);
 		return FALSE;
@@ -197,7 +196,7 @@ void* receiveData(void* vargp) {
 	int recv_size;
 	char* response = (char*) calloc(2500, 1);
 
-	if ((recv_size = recv(clientSockets[clientId], response, 2500, 0)) == SOCKET_ERROR) {
+	if ((recv_size = recv(clients_sockets[clientId], response, 2500, 0)) == INVALID_RESPONSE) {
 		printf("\nFailed receiving the data from the client %d!\n", clientId + 1);
 		pthread_exit(NULL);
 		return receiveData(vargp);
@@ -213,14 +212,8 @@ void* receiveData(void* vargp) {
 }
 
 int loadServer() {
-	// Init winsock2 and check if fails initializing it
-	if (WSAStartup(MAKEWORD(2,2), &wsa) != 0) {
-		printf("\nFailed. Error Code : %d\n", WSAGetLastError());
-		return FALSE;
-	}
-
 	// Initialize the server
-	if ((ServerSocket = initServer(server_addr, 8080, 3)) == ((SOCKET) NULL)) {
+	if (!initServer(server_addr, 8080, 3)) {
 		printf("\nError: failed initializing the server!");
 		return FALSE;
 	}
@@ -230,9 +223,9 @@ int loadServer() {
 } 
 
 int createServerList() {
-	int c = sizeof(sockaddr_in);
-	SOCKET client;
+	int client;
 	sockaddr_in client_addr;
+	int c = sizeof(client_addr);
 
 	// Regex to clear the terminal.
     printf("\e[1;1H\e[2J");
@@ -241,9 +234,9 @@ int createServerList() {
 	// Wait till the number of the user connected is reached
 	do {	
 		// Check if the connection is made by an invalid socket.
-		while ((client = accept(ServerSocket, (struct sockaddr*) &client_addr, &c)) != INVALID_SOCKET) {
+		while ((client = accept(server_socket, (struct sockaddr*) &client_addr, (socklen_t*) &c)) != INVALID_SOCKET) {
 			// Add the client to the list
-			clientSockets[clientsCount] = client;
+			clients_sockets[clientsCount] = client;
 
 			// Add the new user to the list
 			ip_addrs[clientsCount] = inet_ntoa(client_addr.sin_addr);
@@ -270,7 +263,6 @@ int createServerList() {
 
 void closeServer() {
 	printf("\nClosing the server!");
-	closesocket(ServerSocket);
-	WSACleanup();
+	close(server_socket);
 	return;
 }

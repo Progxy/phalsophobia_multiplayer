@@ -1,7 +1,6 @@
-#include <WinSock2.h>
 #include "utils.h"
 
-typedef enum utilsStatus {SEARCHING, END} utilsStatus;
+typedef enum utilsStatus {SEARCHING, END, INVALID_SOCKET = -1, INVALID_RESPONSE = -1} utilsStatus;
 
 /// @brief Load the server with its basic functions.
 /// @return Return the status of the operation.

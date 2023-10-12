@@ -20,7 +20,9 @@ int startGame() {
     int clientsIds[totalPlayers];
     for (int i = 0; i < totalPlayers; i++) {
         clientsIds[i] = i;
-        if (pthread_create(pids + i, NULL, receiveData, (void*)(clientsIds + i)));
+        if (pthread_create(pids + i, NULL, receiveData, (void*)(clientsIds + i))) {
+            printf("Error: failed creating the thread!\n");
+        }
     }
 
     // Set the game

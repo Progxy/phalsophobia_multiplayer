@@ -157,7 +157,7 @@ void set(int playerNum) {
 
         {
             // Clean the stdin
-            unsigned char c;
+            char c;
             while ((c = getc(stdin)) != EOF) {
                 if (c == '\n'){
                     break;
@@ -191,7 +191,7 @@ void set(int playerNum) {
                 insertZone();
                 {
                     // Clean the stdin
-                    unsigned char c;
+                    char c;
                     while ((c = getc(stdin)) != EOF) {
                         if (c == '\n'){
                             break;
@@ -208,7 +208,7 @@ void set(int playerNum) {
                 deleteZone();
                 {
                     // Clean the stdin
-                    unsigned char c;
+                    char c;
                     while ((c = getc(stdin)) != EOF) {
                         if (c == '\n'){
                             break;
@@ -225,7 +225,7 @@ void set(int playerNum) {
                 printZones();
                 {
                     // Clean the stdin
-                    unsigned char c;
+                    char c;
                     while((c = getc(stdin)) != EOF) {
                         if(c == '\n') {
                             break;          
@@ -245,7 +245,7 @@ void set(int playerNum) {
 
                     {
                         // Clean the stdin
-                        unsigned char c;
+                        char c;
                         while((c = getc(stdin)) != EOF) {
                             if(c == '\n') {
                                 break;          
@@ -267,7 +267,7 @@ void set(int playerNum) {
 
                 {
                     // Clean the stdin
-                    unsigned char c;
+                    char c;
                     while ((c = getc(stdin)) != EOF) {
                         if (c == '\n'){
                             break;
@@ -303,7 +303,7 @@ void setPlayers(int playerIndex, char* info) {
         
         // Clean the stdin
         {
-            unsigned char c;
+            char c;
             while((c = getc(stdin)) != EOF) {
                 if(c == '\n') {
                     break;          
@@ -328,7 +328,7 @@ void setPlayers(int playerIndex, char* info) {
                 player -> playerName = (char*) realloc(player -> playerName, strlen(player -> playerName) + 1);
             } else {
                 // If the input string doesn't contain the newline than clean the stdin
-                unsigned char c;
+                char c;
                 while((c = getc(stdin)) != EOF) {
                     if(c == '\n') {
                         break;          
@@ -377,7 +377,7 @@ void setPlayers(int playerIndex, char* info) {
 
         {
             // Clean the stdin
-            unsigned char c;
+            char c;
             while ((c = getc(stdin)) != EOF) {
                 if (c == '\n'){
                     break;
@@ -616,7 +616,7 @@ static void playTurn(int turnIndex) {
 
             {
                 // Clean the stdin
-                unsigned char c;
+                char c;
                 while ((c = getc(stdin)) != EOF) {
                     if (c == '\n'){
                         break;
@@ -633,7 +633,7 @@ static void playTurn(int turnIndex) {
 
         {
             // Clean the stdin
-            unsigned char c;
+            char c;
             while ((c = getc(stdin)) != EOF) {
                 if (c == '\n'){
                     break;
@@ -715,7 +715,7 @@ void playGame() {
 
                 {
                     // Clean the stdin
-                    unsigned char c;
+                    char c;
                     while ((c = getc(stdin)) != EOF) {
                         if (c == '\n'){
                             break;
@@ -1521,7 +1521,7 @@ static void pickObject(int playerIndex) {
 
     // Check if there's an empty slot for the object
     for (int i = 0; i < 4; i++) {
-        if ((players[playerIndex] -> backpack[i] == EMPTY_SLOT)) {
+        if (players[playerIndex] -> backpack[i] == EMPTY_SLOT) {
             // Set the object in the backpack
             players[playerIndex] -> backpack[i] = players[playerIndex] -> position -> zoneObject;
 
@@ -1668,7 +1668,7 @@ static void useObject(int playerIndex, int currentTurn) {
             
             if (!playerIndex) {
                 // Clean the stdin
-                unsigned char c;
+                char c;
                 while ((c = getc(stdin)) != EOF) {
                     if (c == '\n'){
                         break;
@@ -1724,7 +1724,7 @@ static void useObject(int playerIndex, int currentTurn) {
 
             if (!playerIndex) {
                 // Clean the stdin
-                unsigned char c;
+                char c;
                 while ((c = getc(stdin)) != EOF) {
                     if (c == '\n'){
                         break;
@@ -1888,7 +1888,7 @@ static void useObject(int playerIndex, int currentTurn) {
             
             case 8:
                 // Use the KNIFE and if the mental health is under 30 kill all the players in the same zone as the current player
-                ZoneType currentZone = players[playerIndex] -> position -> zone;
+                ZoneType currentZone = ((players[playerIndex]) -> position) -> zone;
                 players[playerIndex] -> backpack[choice - 1] = EMPTY_SLOT;
                 
                 if ((players[playerIndex] -> mentalHealth) < 30) {
@@ -1969,7 +1969,7 @@ static void useObject(int playerIndex, int currentTurn) {
 
                 if (!playerIndex) {
                     // Clean the stdin
-                    unsigned char c;
+                    char c;
                     while ((c = getc(stdin)) != EOF) {
                         if (c == '\n'){
                             break;
@@ -2085,7 +2085,7 @@ static void giveObjects(int playerIndex, int currentTurn) {
                 printColored("\nError: please insert a valid input!", RED);
                 {
                     // Clean the stdin
-                    unsigned char c;
+                    char c;
                     while ((c = getc(stdin)) != EOF) {
                         if (c == '\n'){
                             break;
@@ -2135,7 +2135,7 @@ static void giveObjects(int playerIndex, int currentTurn) {
 
                     {
                         // Clean the stdin
-                        unsigned char c;
+                        char c;
                         while ((c = getc(stdin)) != EOF) {
                             if (c == '\n'){
                                 break;
@@ -2245,7 +2245,7 @@ static void giveObjects(int playerIndex, int currentTurn) {
                         printColored("\nError: please insert a valid input!", RED);
                         {
                             // Clean the stdin
-                            unsigned char c;
+                            char c;
                             while ((c = getc(stdin)) != EOF) {
                                 if (c == '\n'){
                                     break;
@@ -2314,7 +2314,7 @@ static void giveObjects(int playerIndex, int currentTurn) {
 
                         {
                             // Clean the stdin
-                            unsigned char c;
+                            char c;
                             while ((c = getc(stdin)) != EOF) {
                                 if (c == '\n'){
                                     break;
@@ -2356,7 +2356,7 @@ static void giveObjects(int playerIndex, int currentTurn) {
 
                         {
                             // Clean the stdin
-                            unsigned char c;
+                            char c;
                             while ((c = getc(stdin)) != EOF) {
                                 if (c == '\n'){
                                     break;
@@ -2466,7 +2466,7 @@ static void removeObject(int playerIndex, int currentTurn) {
 
                 {
                     // Clean the stdin
-                    unsigned char c;
+                    char c;
                     while ((c = getc(stdin)) != EOF) {
                         if (c == '\n'){
                             break;
@@ -2516,7 +2516,7 @@ static void removeObject(int playerIndex, int currentTurn) {
 
                     {
                         // Clean the stdin
-                        unsigned char c;
+                        char c;
                         while ((c = getc(stdin)) != EOF) {
                             if (c == '\n'){
                                 break;
@@ -2666,7 +2666,7 @@ static void reorginizeBackpack(int playerIndex, int currentTurn) {
 
                 {
                     // Clean the stdin
-                    unsigned char c;
+                    char c;
                     while ((c = getc(stdin)) != EOF) {
                         if (c == '\n'){
                             break;
@@ -2781,7 +2781,7 @@ static void reorginizeBackpack(int playerIndex, int currentTurn) {
 
                     {
                         // Clean the stdin
-                        unsigned char c;
+                        char c;
                         while ((c = getc(stdin)) != EOF) {
                             if (c == '\n'){
                                 break;
@@ -2914,7 +2914,7 @@ static void checkGameStatus() {
                 
                 {
                     // Clean the stdin
-                    unsigned char c;
+                    char c;
                     while ((c = getc(stdin)) != EOF) {
                         if (c == '\n'){
                             break;
