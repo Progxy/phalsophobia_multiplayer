@@ -12,9 +12,9 @@ static void printColored(char* str, ColorType color) {
     return;
 }
 
-void setPlayer() {
+void setPlayer(void) {
     // Regex to clear the terminal.
-    printf("\e[1;1H\e[2J");
+    printf("\033[1;1H\033[2J");
 
     printColored("\n------------- PLAYER INFO -------------\n", MAGENTA);
 
@@ -44,14 +44,14 @@ void setPlayer() {
             char c;
             while((c = getc(stdin)) != EOF) {
                 if(c == '\n') {
-                    break;          
+                    break;
                 }
             }
 
             // Change the newline with the string terminator
             *temp = '\0';
         }
-            
+
         // Check if the given input string is empty or not
         int isEmpty = 1;
         for (int i = 0; player.playerName[i] != '\0'; i++) {
@@ -110,11 +110,11 @@ void setPlayer() {
     return;
 }
 
-static void sendInput() {
+static void sendInput(void) {
     char* temp = (char *) calloc(50, 1);
     fgets(temp, 50, stdin);
     temp = (char*) realloc(temp, strlen(temp) + 1);
-    
+
     if (!sendData(temp)) {
         printf("\nError while sending the data to the server!");
     }
@@ -124,7 +124,7 @@ static void sendInput() {
     return;
 }
 
-void playTurn() {
+void playTurn(void) {
     while (TRUE) {
         // Wait to know if it's your turn
         char* temp;
@@ -133,7 +133,7 @@ void playTurn() {
         // If it's not your turn wait the end of the turn
         if (!strcmp(temp, "NYT")) {
             bool endGameCondition;
-            
+
             while (!strcmp(temp, "TT") || (endGameCondition = !strcmp(temp, "TG"))) {
                 while ((temp = getDataReceived()) == NULL);
                 printf("%s", temp);
@@ -145,13 +145,13 @@ void playTurn() {
             if (endGameCondition) {
                 return;
             }
-        
+
         }
 
         do {
             // Get the instructions from the game
             while ((temp = getDataReceived()) == NULL);
-            
+
             // Check if the user input is needed
             if (!strcmp(temp, "UI")) {
                 free(temp);

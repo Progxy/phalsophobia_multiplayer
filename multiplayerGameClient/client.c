@@ -20,7 +20,7 @@ bool sendData(char* message) {
 	char temp[2500];
 
 	// Copy the message in a array with fixed length
-	for (int i = 0; i < strlen(message) + 1; i++) {
+	for (unsigned int i = 0; i < strlen(message) + 1; i++) {
 		temp[i] = message[i];
 	}
 
@@ -29,11 +29,11 @@ bool sendData(char* message) {
 		printf("\nFailed sending the message to the server!\n");
 		return FALSE;
 	}
-    
+
 	return TRUE;
 }
 
-char* getDataReceived() {
+char* getDataReceived(void) {
 	// Check if there's something to retrive
 	if (firstDataCollected == NULL) {
 		// Return the data requested
@@ -70,7 +70,7 @@ static void saveDataReceived(char* dataRecv) {
 	dataReceived* newData = (dataReceived*) malloc(sizeof(dataReceived));
 
 	// Set the given string in the data collection
-	newData -> data = dataRecv; 
+	newData -> data = dataRecv;
 
 	// Set the next pointer as the last element
 	newData -> next = NULL;
@@ -85,7 +85,7 @@ static void saveDataReceived(char* dataRecv) {
 
 		// Set the last element as the next one
 		firstDataCollected -> next = lastDataCollected;
-		
+
 		return;
 	}
 
@@ -98,7 +98,7 @@ static void saveDataReceived(char* dataRecv) {
 	return;
 }
 
-void* receiveData() {
+void* receiveData(void) {
 	// Set the exit for the recursion
 	if (!threadState) {
 		return NULL;
@@ -123,27 +123,27 @@ void* receiveData() {
 	// Save the data received
 	response[total_received] = 0;
 	saveDataReceived(response);
-	
+
 	return receiveData();
 }
 
-bool initClient() {
+bool initClient(void) {
 	// Regex to clear the terminal.
-    printf("\e[1;1H\e[2J");
+    printf("\033[1;1H\033[2J");
 
 	// Request the ip address
 	char ip_addrs[255];
 	printf("\nInsert the ip address: ");
 	fgets(ip_addrs, 255, stdin);
 	char* temp = strchr(ip_addrs, '\n');
-	
+
 	if (temp != NULL) {
 		*temp = '\0';
 	}
-	
+
 	printf("\nTrying to connect to the server at ip address: %s!\n", ip_addrs);
 
-	// Create the socket 
+	// Create the socket
 	if ((socket_desc = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
 		printf("\nCould not create socket\n");
 		return FALSE;
@@ -159,16 +159,16 @@ bool initClient() {
 		printf("\nFailed connecting to the server!\n");
 		return FALSE;
 	}
-	
+
 	// Regex to clear the terminal.
-    printf("\e[1;1H\e[2J");
+    printf("\033[1;1H\033[2J");
 
 	printf("\x1b[1;33m\nWaiting the game master to select the game settings...\x1b[1;0m");
 
 	return TRUE;
 }
 
-void closeClient() {
+void closeClient(void) {
 	close(socket_desc);
 	return;
 }

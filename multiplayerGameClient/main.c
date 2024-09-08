@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include "network.h"
-#include "utils.h"
 
-int main() {
+int main(void) {
     // Regex to clear the terminal.
-    printf("\e[1;1H\e[2J");
+    printf("\033[1;1H\033[2J");
 
     char confirm;
     printf("\x1b[1;35m\n------------- WELCOME TO PHALSOPHOBIA -------------\n\x1b[1;0m");
