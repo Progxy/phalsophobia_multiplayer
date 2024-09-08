@@ -5,6 +5,7 @@
 #define TRUE 1
 #define FALSE 0
 #define EMPTY_SLOT 15
+#define UNUSED __attribute__((unused))
 
 typedef int bool;
 

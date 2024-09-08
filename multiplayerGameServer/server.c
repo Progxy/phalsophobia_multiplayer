@@ -46,7 +46,7 @@ static bool initServer(sockaddr_in server, unsigned short port, int backlog) {
 
 	// Bind the socket and check if fails binding it
 	if (bind(server_socket, (struct sockaddr*) &server, sizeof(server)) < 0) {
-		printf("\nBind failed with error code!\n");
+		perror("Bind failed with error code:");
 		return FALSE;
 	}
 

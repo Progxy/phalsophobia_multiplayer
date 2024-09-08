@@ -98,7 +98,7 @@ static void saveDataReceived(char* dataRecv) {
 	return;
 }
 
-void* receiveData(void) {
+void* receiveData(UNUSED void* data) {
 	// Set the exit for the recursion
 	if (!threadState) {
 		return NULL;
@@ -106,25 +106,19 @@ void* receiveData(void) {
 
 	char* response = (char*) calloc(2500, 1);
 
-	int total_received = 0, received = 0;
-	do {
-		received = recv(socket_desc, response + total_received, 2500 - total_received, 0);
-		if (received == -1) {
-			printf("\nrecv() failed.");
-			return receiveData();
-		}
+	int received = 0;
+    received = recv(socket_desc, response, 2500, 0);
 
-		if (received > 0) {
-			total_received += received;
-		}
-
-	} while (received != 0);
+    if (received == -1) {
+        printf("\nrecv() failed.");
+        return receiveData(NULL);
+    }
 
 	// Save the data received
-	response[total_received] = 0;
+	response[received] = 0;
 	saveDataReceived(response);
 
-	return receiveData();
+	return receiveData(NULL);
 }
 
 bool initClient(void) {
@@ -160,10 +154,7 @@ bool initClient(void) {
 		return FALSE;
 	}
 
-	// Regex to clear the terminal.
-    printf("\033[1;1H\033[2J");
-
-	printf("\x1b[1;33m\nWaiting the game master to select the game settings...\x1b[1;0m");
+	printf("\x1b[1;33m\nWaiting the game master to select the game settings...\x1b[1;0m\n");
 
 	return TRUE;
 }

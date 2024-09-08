@@ -60,7 +60,7 @@ int startGame(void) {
     char* tempInfo = showGameSettings();
 
     // Regex to clear the terminal.
-    int currentLen = sprintf(gameSettings, "\033[1;1H\033[2J%s\x1b[1;33m\n\nWait the game master to start the game...\x1b[1;0m", tempInfo);
+    int currentLen = sprintf(gameSettings, "\033[1;1H\033[2J%s\x1b[1;33m\n\nWait the game master to start the game...\x1b[1;0m\n", tempInfo);
     gameSettings = (char*) realloc(gameSettings, currentLen + 1);
 
     for (int i = 0; i < totalPlayers; i++) {

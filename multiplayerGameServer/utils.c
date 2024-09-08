@@ -388,8 +388,6 @@ void setPlayers(int playerIndex, char* info) {
             printColored("\n\nPress ENTER to continue: ", YELLOW);
             scanf("%c", &confirm);
         }
-
-
     } else {
         // Allocate the space for the player's name and load the name
         int index;

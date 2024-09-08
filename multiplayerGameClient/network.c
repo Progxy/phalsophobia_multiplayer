@@ -6,7 +6,7 @@
 #include "utils.h"
 #include "network.h"
 
-bool enterGame() {
+bool enterGame(void) {
     // Init the connection to the server
     if (!initClient()) {
         printf("\nError while initializing the client!");
@@ -21,13 +21,15 @@ bool enterGame() {
     }
 
     // Wait the signal to send the player data
-    while((getDataReceived()) == NULL);
+    char* temp = NULL;
+    while((temp = getDataReceived()) == NULL) {
+        if (temp != NULL) printf("temp: %s\n", temp);
+    };
 
     // Set the player info
     setPlayer();
 
-    // Show game settings 
-    char* temp;
+    // Show game settings
     while((temp = getDataReceived()) == NULL);
     printf("%s", temp);
 
@@ -47,7 +49,7 @@ bool sendPlayerData(Player player) {
     char* data = (char*) malloc(375);
     int dataLen = sprintf(data, "%s>%c", player.playerName, player.useAdvices ? 'Y' : 'N');
     data = (char*) realloc(data, dataLen);
-    
+
     // Send the data
     sendData(data);
 

@@ -16,7 +16,7 @@ bool initClient(void);
 bool sendData(char* message);
 
 /// @brief Receive the data from the given target.
-void* receiveData(void);
+void* receiveData(UNUSED void* data);
 
 /// @brief Retrieve the data sent by the server.
 /// @return Return the most recent message received, if there's.
