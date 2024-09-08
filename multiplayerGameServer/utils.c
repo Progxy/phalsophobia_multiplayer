@@ -27,89 +27,89 @@ static const char* colorsCodes[] = {"\x1b[1;30m", "\x1b[1;31m", "\x1b[1;32m", "\
 static const int gameLevels[] = {15, 30, 50};
 
 /// @brief Insert a zone to the end of the list.
-static void insertZone();
+static void insertZone(void);
 
 /// @brief Delete the last zone.
-static void deleteZone();
+static void deleteZone(void);
 
 /// @brief Print all the zones currently on the map.
-static void printZones();
+static void printZones(void);
 
 /// @brief Move the evidence from the player's backpack to the caravan, and set the player's position to the first zone.
-/// @param playerIndex 
+/// @param playerIndex
 /// @return Return 1 if the player has an evidence, otherwise 0.
 static void goToCaravan(int playerIndex);
 
 /// @brief Print the info of the given player.
-/// @param playerIndex 
-/// @param currentTurn 
+/// @param playerIndex
+/// @param currentTurn
 static void printPlayer(int playerIndex, int currentTurn);
 
 /// @brief Print the info of the given zone.
 /// @param playerIndex
-/// @param currentTurn 
+/// @param currentTurn
 static void printZone(int playerIndex, int currentTurn);
 
 /// @brief Move the given player to the next zone.
-/// @param playerIndex 
+/// @param playerIndex
 static void goToNextZone(int playerIndex);
 
 /// @brief Pick an evidence from a zone if the player has the object to pick it.
-/// @param playerIndex 
+/// @param playerIndex
 static void pickEvidence(int playerIndex);
 
 /// @brief Try to pick the object from the current player's position.
-/// @param playerIndex 
+/// @param playerIndex
 static void pickObject(int playerIndex);
 
-/// @brief Use an object from the availables in the backpack. 
-/// @param playerIndex 
-/// @param currentTurn 
+/// @brief Use an object from the availables in the backpack.
+/// @param playerIndex
+/// @param currentTurn
 static void useObject(int playerIndex, int currentTurn);
 
 /// @brief Give an object to another player.
-/// @param playerIndex 
-/// @param currentTurn 
+/// @param playerIndex
+/// @param currentTurn
 static void giveObjects(int playerIndex, int currentTurn);
 
 /// @brief Remove an object from the player's backpack.
-/// @param playerIndex 
-/// @param currentTurn 
+/// @param playerIndex
+/// @param currentTurn
 static void removeObject(int playerIndex, int currentTurn);
 
 /// @brief Let the user reorginize the backpack as he wants to.
-/// @param playerIndex 
-/// @param currentTurn 
+/// @param playerIndex
+/// @param currentTurn
 static void reorginizeBackpack(int playerIndex, int currentTurn);
 
 /// @brief Generate a random number in a given range.
-/// @param range 
+/// @param range
 /// @return Return a random number in the given range.
 static int randomNumber(int range);
 
 /// @brief Generate the turns for a round.
-static void generateTurns();
+static void generateTurns(void);
 
 /// @brief Check if the players win or lose.
-static void checkGameStatus();
+static void checkGameStatus(void);
 
-/// @brief Print the info of the objects availables. 
-/// @param objects 
+/// @brief Print the info of the objects availables.
+/// @param objects
 static char* printObjectsInfo(unsigned char objects[]);
 
 /// @brief Print all the evidences that are in the caravan.
-/// @param playerIndex 
-/// @param currentTurn 
+/// @param playerIndex
+/// @param currentTurn
 static void printEvidenceCollected(int playerIndex, int currentTurn);
 
 /// @brief Print the info about the ghost.
-/// @param playerIndex 
-/// @param currentTurn 
+/// @param playerIndex
+/// @param currentTurn
 static void printGhostInfo(int playerIndex, int currentTurn);
 
 /// @brief Print using the given color.
-/// @param str 
-/// @param color 
+/// @param str
+/// @param color
 static void printColored(char* str, ColorType color);
 
 /// @brief Print the advice for the player.
@@ -117,7 +117,7 @@ static void printColored(char* str, ColorType color);
 static char* printAdvices(int playerIndex);
 
 /// @brief Play the turn as the game master.
-/// @param turnIndex 
+/// @param turnIndex
 static void playTurn(int turnIndex);
 
 /* END OF INITIALIZATIONS AND DECLARATIONS */
@@ -130,7 +130,7 @@ void set(int playerNum) {
     playerCount = playerNum;
 
     // Regex to clear the terminal.
-    printf("\e[1;1H\e[2J");
+    printf("\033[1;1H\033[2J");
 
     // Allocate the space for the players
     players = (Player**) calloc(playerCount, sizeof(Player*));
@@ -138,8 +138,8 @@ void set(int playerNum) {
     // Request the difficulty level
     do {
         // Regex to clear the terminal.
-        printf("\e[1;1H\e[2J");
-        
+        printf("\033[1;1H\033[2J");
+
         printColored("\n------------- DIFFICULTY LEVELS -------------\n", MAGENTA);
         printf("\n1) Amateur;");
         printf("\n2) Intermediate;");
@@ -170,13 +170,13 @@ void set(int playerNum) {
         }
 
     } while (TRUE);
-    
+
     // Generate the game map
     do {
         int choice = 0;
 
         // Regex to clear the terminal.
-        printf("\e[1;1H\e[2J");
+        printf("\033[1;1H\033[2J");
 
         printColored("\n------------- MAP EDITOR -------------\n", MAGENTA);
         printf("\n1) Insert a new zone;");
@@ -187,7 +187,7 @@ void set(int playerNum) {
         scanf("%d", &choice);
 
         switch (choice) {
-            case 1: 
+            case 1:
                 insertZone();
                 {
                     // Clean the stdin
@@ -202,9 +202,9 @@ void set(int playerNum) {
                     printColored("\n\nPress ENTER to continue: ", YELLOW);
                     scanf("%c", &confirm);
                 }
-                break;   
+                break;
 
-            case 2: 
+            case 2:
                 deleteZone();
                 {
                     // Clean the stdin
@@ -219,18 +219,18 @@ void set(int playerNum) {
                     printColored("\n\nPress ENTER to continue: ", YELLOW);
                     scanf("%c", &confirm);
                 }
-                break;            
-            
-            case 3: 
+                break;
+
+            case 3:
                 printZones();
                 {
                     // Clean the stdin
                     char c;
                     while((c = getc(stdin)) != EOF) {
                         if(c == '\n') {
-                            break;          
+                            break;
                         }
-                    } 
+                    }
 
                     char confirm;
                     printColored("\n\nPress ENTER to continue: ", YELLOW);
@@ -248,15 +248,15 @@ void set(int playerNum) {
                         char c;
                         while((c = getc(stdin)) != EOF) {
                             if(c == '\n') {
-                                break;          
+                                break;
                             }
-                        } 
+                        }
 
                         char confirm;
                         printColored("\nPress ENTER to continue: ", YELLOW);
                         scanf("%c", &confirm);
                     }
-                    
+
                     break;
                 }
 
@@ -297,23 +297,23 @@ void setPlayers(int playerIndex, char* info) {
     // If the player is the game master ask the name and the useadvice
     if (playerIndex == 0) {
         // Regex to clear the terminal.
-        printf("\e[1;1H\e[2J");
-        
+        printf("\033[1;1H\033[2J");
+
         printColored("\n------------- PLAYER INFO -------------\n", MAGENTA);
-        
+
         // Clean the stdin
         {
             char c;
             while((c = getc(stdin)) != EOF) {
                 if(c == '\n') {
-                    break;          
+                    break;
                 }
-            }   
+            }
         }
 
         // Allocate the space for the player's name
         player -> playerName = (char*) malloc(225);
-    
+
         // Get the player's name
         do {
             printf("\nInsert the name of the player %s (MAX 225 characters)%s: ", colorsCodes[YELLOW], colorsCodes[DEFAULT_COLOR]);
@@ -331,14 +331,14 @@ void setPlayers(int playerIndex, char* info) {
                 char c;
                 while((c = getc(stdin)) != EOF) {
                     if(c == '\n') {
-                        break;          
+                        break;
                     }
                 }
 
                 // Change the newline with the string terminator
                 *temp = '\0';
             }
-            
+
             // Check if the given input string is empty or not
             int isEmpty = 1;
             for (int i = 0; player -> playerName[i] != '\0'; i++) {
@@ -425,7 +425,7 @@ void setPlayers(int playerIndex, char* info) {
     return;
 }
 
-char* showGameSettings() {
+char* showGameSettings(void) {
     char* result = (char*) malloc(2500);
     int currentLen = 0;
 
@@ -437,7 +437,7 @@ char* showGameSettings() {
     for (int i = 0; i < playerCount; i++) {
         currentLen += sprintf(result + currentLen, "%s%s", players[i] -> playerName, i != (playerCount - 1) ? ", " : ")");
     }
-    
+
     currentLen += sprintf(result + currentLen, "\nGame difficulty: %s\n", difficultiesLevels[gameLevel]);
 
     currentLen += sprintf(result + currentLen, "%s\n------------- CURRENT MAP -------------\n%s", colorsCodes[CYAN], colorsCodes[DEFAULT_COLOR]);
@@ -447,18 +447,18 @@ char* showGameSettings() {
     for (MapZone* scan = firstZone; scan != lastZone; scan = (scan -> nextZone)) {
         currentLen += sprintf(result + currentLen, "%s --> ", zoneTypeNames[scan -> zone]);
     }
-    
+
     // Check if last zone is already defined
     if (lastZone != NULL) {
         currentLen += sprintf(result + currentLen, "%s", zoneTypeNames[lastZone -> zone]);
     }
-    
+
     result = (char*) realloc(result, currentLen + 1);
 
     return result;
 }
 
-void resetData() {
+void resetData(void) {
     // Set to zero all the variables
     roundCount = 0;
     ghostPosition = NO_ZONE;
@@ -486,7 +486,7 @@ static void playTurn(int turnIndex) {
 
     do {
         // Regex to clear the terminal.
-        printf("\e[1;1H\e[2J");
+        printf("\033[1;1H\033[2J");
 
         printf("\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n%s", colorsCodes[MAGENTA], (roundCount + 1), (turnIndex + 1), players[0] -> playerName, colorsCodes[DEFAULT_COLOR]);
 
@@ -535,7 +535,7 @@ static void playTurn(int turnIndex) {
                 turnStatus = FINISHED;
                 break;
 
-            case 3: 
+            case 3:
                 pickEvidence(0);
                 break;
 
@@ -548,7 +548,7 @@ static void playTurn(int turnIndex) {
                 break;
 
             case 6:
-                turnStatus = FINISHED; 
+                turnStatus = FINISHED;
                 printColored("\nYou have skipped your turn!", YELLOW);
                 break;
 
@@ -582,7 +582,7 @@ static void playTurn(int turnIndex) {
 
             case 14:
                 // Regex to clear the terminal.
-                printf("\e[1;1H\e[2J");
+                printf("\033[1;1H\033[2J");
 
                 printf("\n%sROUND: %d - TURN: %d\n%s", colorsCodes[MAGENTA], (roundCount + 1), (turnIndex + 1), colorsCodes[DEFAULT_COLOR]);
 
@@ -595,8 +595,8 @@ static void playTurn(int turnIndex) {
 
                 break;
 
-            case 15: 
-                close();
+            case 15:
+                close_game();
                 return;
 
             default:
@@ -608,7 +608,7 @@ static void playTurn(int turnIndex) {
         if (turnStatus == FINISHED) {
             // The probability that the mental health decrease is 20 %
             int randomNum = randomNumber(100);
-            
+
             if (randomNum < 20) {
                 player -> mentalHealth -= 15;
                 printf("%s\n\nYour mental health has decreased to %d%s", colorsCodes[YELLOW], player -> mentalHealth, colorsCodes[DEFAULT_COLOR]);
@@ -646,7 +646,7 @@ static void playTurn(int turnIndex) {
         }
 
     } while(TRUE);
-    
+
     return;
 }
 
@@ -661,12 +661,12 @@ static char* requestInput(int playerTurn) {
     return userInput;
 }
 
-void playGame() {
+void playGame(void) {
     while (TRUE) {
         // Generate the turns for this round
         generateTurns();
 
-        // Play every player's turn 
+        // Play every player's turn
         for (int index = 0; index < playerCount; index++) {
             // TODO: Check if the game has been closed otherwise you'll get some segfaults
             int playerTurn = turns[index];
@@ -692,13 +692,13 @@ void playGame() {
             if ((gameState == WIN) || (gameState == GAME_OVER)) {
 
                 // Regex to clear the terminal.
-                printf("\e[1;1H\e[2J");
+                printf("\033[1;1H\033[2J");
 
                 printf("\n%s%s the players have %s!%s", gameState == WIN ? colorsCodes[GREEN] : colorsCodes[RED], gameState == WIN ? "The game ends," : "Game Over, ", gameState == WIN ? "won, congratulations" : "lost", colorsCodes[DEFAULT_COLOR]);
 
                 // Send the info of the end of the game to the players
                 char* info = (char*) malloc(125);
-                int size = sprintf(info, "\e[1;1H\e[2J\n%s%s the players have %s!%s", gameState == WIN ? colorsCodes[GREEN] : colorsCodes[RED], gameState == WIN ? "The game ends," : "Game Over, ", gameState == WIN ? "won, congratulations" : "lost", colorsCodes[DEFAULT_COLOR]);
+                int size = sprintf(info, "\033[1;1H\033[2J\n%s%s the players have %s!%s", gameState == WIN ? colorsCodes[GREEN] : colorsCodes[RED], gameState == WIN ? "The game ends," : "Game Over, ", gameState == WIN ? "won, congratulations" : "lost", colorsCodes[DEFAULT_COLOR]);
                 info = (char*) realloc(info, size + 1);
                 for (int i = 1; i < playerCount; i++) {
                     if (!sendData(i, info)) {
@@ -727,9 +727,9 @@ void playGame() {
                     printColored("\n\nPress ENTER to continue: ", YELLOW);
                     scanf("%c", &confirm);
                 }
-                
+
                 // Deallocate all the memory from the heap for the next game
-                close();
+                close_game();
 
                 return;
             }
@@ -737,18 +737,18 @@ void playGame() {
             // If the player has been eliminated skip his turn
             if (players[playerTurn] == NULL) {
                 // Send the terminate turn signal
-                for (int i = 1; i < playerCount; i++) {                
+                for (int i = 1; i < playerCount; i++) {
                     if (!sendData(i, "TT")) {
                         printf("\nError while sending info");
                     }
                 }
                 continue;
-            } 
+            }
 
             do {
                 // Send to all the player the current info
                 char* turnInfo = (char*) malloc(125);
-                int size = sprintf(turnInfo, "\e[1;1H\e[2J\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n%s", colorsCodes[MAGENTA], (roundCount + 1), (index + 1), players[playerTurn] -> playerName, colorsCodes[DEFAULT_COLOR]);
+                int size = sprintf(turnInfo, "\033[1;1H\033[2J\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n%s", colorsCodes[MAGENTA], (roundCount + 1), (index + 1), players[playerTurn] -> playerName, colorsCodes[DEFAULT_COLOR]);
                 turnInfo = (char*) realloc(turnInfo, size + 1);
 
                 for (int i = 1; i < playerCount; i++) {
@@ -783,7 +783,7 @@ void playGame() {
                     break;
                 }
 
-                printf("\e[1;1H\e[2J\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n%s", colorsCodes[MAGENTA], (roundCount + 1), (index + 1), players[playerTurn] -> playerName, colorsCodes[DEFAULT_COLOR]);
+                printf("\033[1;1H\033[2J\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n%s", colorsCodes[MAGENTA], (roundCount + 1), (index + 1), players[playerTurn] -> playerName, colorsCodes[DEFAULT_COLOR]);
                 printColored("\nWait the end of the current turn!", YELLOW);
 
                 int choice = 0;
@@ -841,7 +841,7 @@ void playGame() {
                         turnStatus = FINISHED;
                         break;
 
-                    case 3: 
+                    case 3:
                         pickEvidence(playerTurn);
                         break;
 
@@ -854,16 +854,16 @@ void playGame() {
                         break;
 
                     case 6:
-                        turnStatus = FINISHED; 
+                        turnStatus = FINISHED;
                         {
                             char* info = (char*) malloc(325);
                             int size = sprintf(info, "%s\nYou have skipped your turn!%s", colorsCodes[YELLOW], colorsCodes[DEFAULT_COLOR]);
                             info = (char*) realloc(info, size + 1);
-                            
+
                             if (!sendData(playerTurn, info)) {
                                 printf("\nError while sending the info!");
                             }
-                            
+
                             free(info);
                         }
                         break;
@@ -897,13 +897,13 @@ void playGame() {
                         break;
 
                     case 14:
-                        {                     
+                        {
                             // Show the current settings
                             char* info = (char*) malloc(1000);
                             char* gameSettings = showGameSettings();
-                            int size = sprintf(info, "\e[1;1H\e[2J\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n%s%s", colorsCodes[MAGENTA], (roundCount + 1), (index + 1), players[playerTurn] -> playerName, colorsCodes[DEFAULT_COLOR], gameSettings);
+                            int size = sprintf(info, "\033[1;1H\033[2J\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n%s%s", colorsCodes[MAGENTA], (roundCount + 1), (index + 1), players[playerTurn] -> playerName, colorsCodes[DEFAULT_COLOR], gameSettings);
                             info = (char*) realloc(info, size + 1);
-                            
+
                             if (!sendData(playerTurn, info)) {
                                 printf("\nError while sending the info!");
                             }
@@ -914,23 +914,23 @@ void playGame() {
 
                         break;
 
-                    case 15: 
-                        close();
+                    case 15:
+                        close_game();
                         return;
 
                     default:
-                        {                            
+                        {
                             char* info = (char*) malloc(125);
                             int size = sprintf(info, "%s\nError: please insert a valid input!%s", colorsCodes[RED], colorsCodes[DEFAULT_COLOR]);
                             info = (char*) realloc(info, size + 1);
-                            
+
                             if (!sendData(playerTurn, info)) {
                                 printf("\nError while sending the info!");
                             }
 
                             free(info);
                         }
-                        
+
                         break;
                 }
 
@@ -938,15 +938,15 @@ void playGame() {
                 if (turnStatus == FINISHED) {
                     // The probability that the mental health decrease is 20 %
                     int randomNum = randomNumber(100);
-                    
+
                     if (randomNum < 20) {
                         players[playerTurn] -> mentalHealth -= 15;
-                        
+
                         if (playerTurn) {
                             char* info = (char*) malloc(125);
                             int size = sprintf(info, "%s\n\nYour mental health has decreased to %d%s", colorsCodes[YELLOW], players[playerTurn] -> mentalHealth, colorsCodes[DEFAULT_COLOR]);
                             info = (char*) realloc(info, size + 1);
-                            
+
                             if (!sendData(playerTurn, info)) {
                                 printf("\nError while sending the info!");
                             }
@@ -971,7 +971,7 @@ void playGame() {
                     requestInput(playerTurn);
 
                     // Send the terminate turn signal
-                    for (int i = 1; i < playerCount; i++) {                
+                    for (int i = 1; i < playerCount; i++) {
                         if (!sendData(i, "TT")) {
                             printf("\nError while sending info");
                         }
@@ -992,7 +992,7 @@ void playGame() {
 
                 // Before going to the next turn wait that the player confirms that has read that
                 requestInput(playerTurn);
-            
+
             } while(TRUE);
 
         }
@@ -1003,7 +1003,7 @@ void playGame() {
     return;
 }
 
-void close() {
+void close_game(void) {
     // Deallocate all the players alive
     free(players);
     players = NULL;
@@ -1012,7 +1012,7 @@ void close() {
     while (firstZone != NULL) {
         deleteZone();
     }
-    
+
     // Deallocate the turns if already used
     if (turns != NULL) {
         free(turns);
@@ -1027,7 +1027,7 @@ void close() {
 
 /* INTERNALS FUNCTIONS DEFINITION */
 
-static void insertZone() {
+static void insertZone(void) {
     // Allocate the space for a new zone
     MapZone* newZone = (MapZone*) malloc(sizeof(MapZone));
 
@@ -1035,10 +1035,10 @@ static void insertZone() {
     if (firstZone == NULL) {
         // Set the first zone as the new zone created
         firstZone = newZone;
-        
+
         // Set the last zone equal to the first zone to make the list circular
         lastZone = firstZone;
-        
+
         // Set the last zone as the next zone
         firstZone -> nextZone = lastZone;
 
@@ -1047,16 +1047,17 @@ static void insertZone() {
 
         // Generate the object inside the zone
         int randomObject = randomNumber(6) + 6;
-    
+
         // If the generated object is equal to 11, assign it as NO_OBJECT (= 10)
         firstZone -> zoneObject = randomObject == 11 ? randomObject - 1 : randomObject;
-        
+
         // Set the evidence in the zone as empty
         firstZone -> evidence = 0;
 
-        return printZones();
+        printZones();
+        return;
     }
-    
+
     // The old last zone point to the new last zone
     lastZone -> nextZone = newZone;
 
@@ -1071,35 +1072,37 @@ static void insertZone() {
 
     // Generate the object inside the zone
     int randomObject = randomNumber(6) + 6;
-    
+
     // If the generated object is equal to 11, assign it as NO_OBJECT (= 10)
     lastZone -> zoneObject = randomObject == 11 ? randomObject - 1 : randomObject;
 
     // Set the evidence in the zone as empty
     lastZone -> evidence = 0;
 
-    return printZones();
+    printZones();
+    return;
 }
 
-static void deleteZone() {
+static void deleteZone(void) {
     // If the first zone is NULL, than the list is empty
     if (firstZone == NULL) {
         printColored("\nThe map is already empty!", YELLOW);
         return;
     }
-    
+
     // If the list has only one element reset the list
     if (firstZone == lastZone) {
         free(firstZone);
         firstZone = NULL;
         lastZone = NULL;
-        return printZones();
+        printZones();
+        return;
     }
 
     // Search for the zone that points to the last zone
     MapZone* scan;
     for (scan = firstZone; (scan -> nextZone) != lastZone; scan = (scan -> nextZone));
-    
+
     // Deallocate the last zone
     free(lastZone);
 
@@ -1109,10 +1112,11 @@ static void deleteZone() {
     // Set the first zone as the next zone
     lastZone -> nextZone = firstZone;
 
-    return printZones();
+    printZones();
+    return;
 }
 
-static void printZones() {
+static void printZones(void) {
     // If the first zone is NULL, than the list is empty
     if (firstZone == NULL) {
         printColored("\nThe map is empty!", YELLOW);
@@ -1125,7 +1129,7 @@ static void printZones() {
     for (MapZone* scan = firstZone; scan != lastZone; scan = (scan -> nextZone)) {
         printf("%s --> ", zoneTypeNames[scan -> zone]);
     }
-    
+
     // Check if last zone is already defined
     if (lastZone != NULL) {
         printf("%s", zoneTypeNames[lastZone -> zone]);
@@ -1140,7 +1144,7 @@ static void goToCaravan(int playerIndex) {
 
     for (int i = 0; i < 4; i++) {
         unsigned char backpackSlot = players[playerIndex] -> backpack[i];
-        
+
         // Check if the current slot is empty or if is not of type EvidenceType
         if ((backpackSlot == EMPTY_SLOT) || (backpackSlot < 11)) {
             continue;
@@ -1171,7 +1175,7 @@ static void goToCaravan(int playerIndex) {
     if (!hasEvidences) {
         // Send the info if is not the game master
         if (playerIndex == 0) {
-            printColored("\nYou don't have evidences!", YELLOW);      
+            printColored("\nYou don't have evidences!", YELLOW);
         } else {
             char* info = (char*) malloc(65);
             int size = sprintf(info, "%s\nYou don't have evidences!%s", colorsCodes[YELLOW], colorsCodes[DEFAULT_COLOR]);
@@ -1188,7 +1192,7 @@ static void goToCaravan(int playerIndex) {
 
     // Send the info if is not the game master
     if (playerIndex == 0) {
-        printColored("\nYou have been repositioned in the first zone!", MAGENTA);     
+        printColored("\nYou have been repositioned in the first zone!", MAGENTA);
     } else {
         char* info = (char*) malloc(85);
         int size = sprintf(info, "%s\nYou have been repositioned in the first zone!%s", colorsCodes[MAGENTA], colorsCodes[DEFAULT_COLOR]);
@@ -1208,7 +1212,7 @@ static void printPlayer(int playerIndex, int currentTurn) {
     // Send the info if is not the game master
     if (playerIndex == 0) {
         // Regex to clear the terminal.
-        printf("\e[1;1H\e[2J");
+        printf("\033[1;1H\033[2J");
         printf("\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR]);
         printColored("\n------------- PLAYER INFO -------------\n", MAGENTA);
         printf("\nName: %s", player -> playerName);
@@ -1221,14 +1225,14 @@ static void printPlayer(int playerIndex, int currentTurn) {
         char* useAdv = (players[playerIndex] -> useAdvices) ? "\nThe advices are active" : "\nThe advices are inactive";
         char* useSalt = (players[playerIndex] -> saltProtection) ? "\nThe salt protection is active" : "\nThe salt protection is inactive";
         char* info = (char*) malloc(750);
-        int size = sprintf(info, "\e[1;1H\e[2J\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n\n------------- PLAYER INFO -------------\n%s\nGhost position: %s\nGhost appeareance probability: %d%%\nName: %s\nMental Health: %d\nPosition: %s%s%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR], zoneTypeNames[ghostPosition], ghostAppearance, player -> playerName, player -> mentalHealth, zoneTypeNames[player -> position -> zone], useAdv, useSalt);
+        int size = sprintf(info, "\033[1;1H\033[2J\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n\n------------- PLAYER INFO -------------\n%s\nGhost position: %s\nGhost appeareance probability: %d%%\nName: %s\nMental Health: %d\nPosition: %s%s%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR], zoneTypeNames[ghostPosition], ghostAppearance, player -> playerName, player -> mentalHealth, zoneTypeNames[player -> position -> zone], useAdv, useSalt);
         info = (char*) realloc(info, size + 1);
         if (!sendData(playerIndex, info)) {
             printf("\nError while sending the info!");
         }
         free(info);
     }
-    
+
     // Print the backpack's slots
     for (int i = 0; i < 4; i++) {
         int slot = player -> backpack[i];
@@ -1255,7 +1259,7 @@ static void printZone(int playerIndex, int currentTurn) {
     // Send the info if is not the game master
     if (playerIndex == 0) {
     // Regex to clear the terminal.
-    printf("\e[1;1H\e[2J");
+    printf("\033[1;1H\033[2J");
     printf("\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR]);
     printColored("\n------------- ZONE INFO -------------\n", MAGENTA);
     printf("\nCurrent zone: %s", zoneTypeNames[currentZone -> zone]);
@@ -1265,7 +1269,7 @@ static void printZone(int playerIndex, int currentTurn) {
 
     } else {
         char* info = (char*) malloc(750);
-        int size = sprintf(info, "\e[1;1H\e[2J\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n\n------------- ZONE INFO -------------\n%s\nCurrent zone: %s\nEvidence in the current zone: %s\nObject in the current zone: %s\nNext zone: %s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR], zoneTypeNames[currentZone -> zone], objectsNames[currentZone -> evidence], objectsNames[currentZone -> zoneObject], zoneTypeNames[currentZone -> nextZone -> zone]);
+        int size = sprintf(info, "\033[1;1H\033[2J\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n\n------------- ZONE INFO -------------\n%s\nCurrent zone: %s\nEvidence in the current zone: %s\nObject in the current zone: %s\nNext zone: %s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR], zoneTypeNames[currentZone -> zone], objectsNames[currentZone -> evidence], objectsNames[currentZone -> zoneObject], zoneTypeNames[currentZone -> nextZone -> zone]);
         info = (char*) realloc(info, size + 1);
         if (!sendData(playerIndex, info)) {
             printf("\nError while sending the info!");
@@ -1281,7 +1285,7 @@ static void goToNextZone(int playerIndex) {
     if ((players[playerIndex] -> position -> zoneObject) == NO_OBJECT) {
         int randomObject = randomNumber(10) + 1;
         players[playerIndex] -> position -> zoneObject = randomObject;
-        
+
         // Send the info if is not the game master
         if (playerIndex == 0) {
             printf("%s\nThe object in the %s has been added!%s", colorsCodes[MAGENTA], zoneTypeNames[players[playerIndex] -> position -> zone], colorsCodes[DEFAULT_COLOR]);
@@ -1314,7 +1318,7 @@ static void goToNextZone(int playerIndex) {
 
     // Change the evidence in the zone reached by the player
     int randomEvidence = randomNumber(5) + 11;
-    
+
     // If the generated num is equal to 15, assign it as NO_EVIDENCE (= 14)
     EvidenceType newEvidence = randomEvidence == 15 ? randomEvidence - 1 : randomEvidence;
     players[playerIndex] -> position -> evidence = newEvidence;
@@ -1336,7 +1340,7 @@ static void goToNextZone(int playerIndex) {
     if ((players[playerIndex] -> position -> zoneObject) == NO_OBJECT) {
         int randomObject = randomNumber(10) + 1;
         players[playerIndex] -> position -> zoneObject = randomObject;
-        
+
         // Send the info if is not the game master
         if (playerIndex == 0) {
             printf("%s\nThe object in the %s has been added!%s", colorsCodes[MAGENTA], zoneTypeNames[players[playerIndex] -> position -> zone], colorsCodes[DEFAULT_COLOR]);
@@ -1379,7 +1383,7 @@ static void pickEvidence(int playerIndex) {
     for (int i = 0; i < 4; i++) {
         if ((players[playerIndex] -> backpack[i]) == (currentZoneEvidence - 10)) {
             players[playerIndex] -> backpack[i] = currentZoneEvidence;
-            
+
             // Send the info if is not the game master
             if (playerIndex == 0) {
                 printf("%s\nEvidence %s has been picked!%s", colorsCodes[MAGENTA], objectsNames[players[playerIndex] -> backpack[i]], colorsCodes[DEFAULT_COLOR]);
@@ -1398,7 +1402,7 @@ static void pickEvidence(int playerIndex) {
             if (randomNum < ghostAppearance) {
                 // Spawn the ghost in the same zone as the current player
                 ghostPosition = players[playerIndex] -> position -> zone;
-                
+
                 // Send the info if is not the game master
                 if (playerIndex == 0) {
                     printf("%s\nThe ghost spawn in the %s zone!%s", colorsCodes[MAGENTA], zoneTypeNames[ghostPosition], colorsCodes[DEFAULT_COLOR]);
@@ -1434,7 +1438,7 @@ static void pickEvidence(int playerIndex) {
                                 players[index] -> mentalHealth -= DECREMENT_NIGHTMARE;
                                 break;
                         }
-                        
+
 
                         // Send the info if is not the game master
                         if (playerIndex == 0) {
@@ -1448,7 +1452,7 @@ static void pickEvidence(int playerIndex) {
                             }
                             free(info);
                         }
-                    
+
                     }
                 }
             }
@@ -1457,12 +1461,12 @@ static void pickEvidence(int playerIndex) {
             switch (gameLevel) {
                 case AMATEUR:
                     ghostAppearance += INCREMENT_AMATEUR;
-                    break;  
+                    break;
 
                 case INTERMEDIATE:
                     ghostAppearance += INCREMENT_INTERMEDIATE;
-                    break;        
-                    
+                    break;
+
                 case NIGHTMARE:
                     ghostAppearance += INCREMENT_NIGHTMARE;
                     break;
@@ -1528,7 +1532,7 @@ static void pickObject(int playerIndex) {
 
             // Set the object in this zone to none, as it has been picked
             players[playerIndex] -> position -> zoneObject = NO_OBJECT;
-            
+
             // Send the info if is not the game master
             if (playerIndex == 0) {
                 printf("%s\nYou have picked the %s!%s", colorsCodes[MAGENTA], objectsNames[players[playerIndex] -> backpack[i]], colorsCodes[DEFAULT_COLOR]);
@@ -1571,14 +1575,14 @@ static void useObject(int playerIndex, int currentTurn) {
         // Send the info if is not the game master
         if (playerIndex == 0) {
             // Regex to clear the terminal.
-            printf("\e[1;1H\e[2J");
+            printf("\033[1;1H\033[2J");
 
             printf("\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR]);
             printColored("\n------------- USABLE OBJECTS -------------\n", MAGENTA);
 
         } else {
             char* info = (char*) malloc(350);
-            int size = sprintf(info, "\e[1;1H\e[2J\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n\n------------- USABLE OBJECTS -------------\n%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR]);
+            int size = sprintf(info, "\033[1;1H\033[2J\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n\n------------- USABLE OBJECTS -------------\n%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR]);
             info = (char*) realloc(info, size + 1);
             if (!sendData(playerIndex, info)) {
                 printf("\nError while sending the info!");
@@ -1588,7 +1592,7 @@ static void useObject(int playerIndex, int currentTurn) {
 
 
         for (int i = 0; i < 4; i++) {
-            // Print as options only the objects that aren't used for the 
+            // Print as options only the objects that aren't used for the
             unsigned char backpackObject = players[playerIndex] -> backpack[i];
             if ((3 < backpackObject) && (backpackObject < 10)) {
                 // Send the info if is not the game master
@@ -1666,7 +1670,7 @@ static void useObject(int playerIndex, int currentTurn) {
                 }
                 free(info);
             }
-            
+
             if (!playerIndex) {
                 // Clean the stdin
                 char c;
@@ -1687,29 +1691,29 @@ static void useObject(int playerIndex, int currentTurn) {
                 if (!sendData(playerIndex, tempInfo)) {
                     printf("\nError while sending the advice!");
                 }
-                
+
                 free(tempInfo);
-                
+
                 // Wait the user to continue
                 requestInput(playerIndex);
             }
 
             continue;
-        } 
-        
+        }
+
         // Check if the player chose one of the extra optons
         if (choice == 5) {
             // Send the info if is not the game master
             if (playerIndex == 0) {
                 // Regex to clear the terminal.
-                printf("\e[1;1H\e[2J");
+                printf("\033[1;1H\033[2J");
                 printf("\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR]);
                 printColored("\n------------- OBJECTS INFO -------------\n", MAGENTA);
                 printf("%s", printObjectsInfo(usableObjects));
 
             } else {
                 char* info = (char*) malloc(350);
-                int size = sprintf(info, "\e[1;1H\e[2J\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n\n------------- OBJECTS INFO -------------\n%s%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR], printObjectsInfo(usableObjects));
+                int size = sprintf(info, "\033[1;1H\033[2J\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n\n------------- OBJECTS INFO -------------\n%s%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR], printObjectsInfo(usableObjects));
                 info = (char*) realloc(info, size + 1);
                 if (!sendData(playerIndex, info)) {
                     printf("\nError while sending the info!");
@@ -1717,7 +1721,7 @@ static void useObject(int playerIndex, int currentTurn) {
 
                 free(info);
             }
-            
+
             // Reset the usable objects list
             for (int i = 0; i < 4; i++) {
                 usableObjects[i] = 0;
@@ -1743,9 +1747,9 @@ static void useObject(int playerIndex, int currentTurn) {
                 if (!sendData(playerIndex, tempInfo)) {
                     printf("\nError while sending the advice!");
                 }
-                
+
                 free(tempInfo);
-                
+
                 // Wait the user to continue
                 requestInput(playerIndex);
             }
@@ -1760,7 +1764,7 @@ static void useObject(int playerIndex, int currentTurn) {
             case 4:
                 // Use the SEDATIVE object to increase the mental health by 40
                 players[playerIndex] -> mentalHealth += 40;
-                players[playerIndex] -> backpack[choice - 1] = EMPTY_SLOT;  
+                players[playerIndex] -> backpack[choice - 1] = EMPTY_SLOT;
                 // Send the info if is not the game master
                 if (playerIndex == 0) {
                     printf("%s\nYou used the SEDATIVE, and your mental health has increased to %d!%s", colorsCodes[MAGENTA], players[playerIndex] -> mentalHealth, colorsCodes[DEFAULT_COLOR]);
@@ -1773,8 +1777,8 @@ static void useObject(int playerIndex, int currentTurn) {
                     }
                     free(info);
                 }
-                return;       
-            
+                return;
+
             case 5:
                 // Use the SALT to prevent a decrement of the mental health, caused by the ghost
                 players[playerIndex] -> saltProtection = 1;
@@ -1791,8 +1795,8 @@ static void useObject(int playerIndex, int currentTurn) {
                     }
                     free(info);
                 }
-                return;            
-            
+                return;
+
             case 6:
                 // Use the ADRENALINE to go to the next zone and obtain an extra turn
                 players[playerIndex] -> backpack[choice - 1] = EMPTY_SLOT;
@@ -1808,8 +1812,9 @@ static void useObject(int playerIndex, int currentTurn) {
                     }
                     free(info);
                 }
-                return goToNextZone(playerIndex);            
-            
+                goToNextZone(playerIndex);
+                return;
+
             case 7:
                 // Use the HUNDRED_DOLLAR to buy a TRANQUILLIZER or SALT
                 do {
@@ -1849,7 +1854,7 @@ static void useObject(int playerIndex, int currentTurn) {
                                 }
                                 free(info);
                             }
-                            return;                    
+                            return;
 
                         case 2:
                             players[playerIndex] -> backpack[choice - 1] = SALT;
@@ -1885,13 +1890,13 @@ static void useObject(int playerIndex, int currentTurn) {
 
                 } while (TRUE);
 
-                return;            
-            
-            case 8:
+                return;
+
+            case 8: {
                 // Use the KNIFE and if the mental health is under 30 kill all the players in the same zone as the current player
                 ZoneType currentZone = ((players[playerIndex]) -> position) -> zone;
                 players[playerIndex] -> backpack[choice - 1] = EMPTY_SLOT;
-                
+
                 if ((players[playerIndex] -> mentalHealth) < 30) {
                     for (int i = 0; i < playerCount; i++) {
                         // Check if the player has been eliminated
@@ -1902,7 +1907,7 @@ static void useObject(int playerIndex, int currentTurn) {
                         if ((i != playerIndex) && ((players[i] -> position -> zone) == currentZone)) {
                             free(players[playerIndex]);
                             players[playerIndex] = NULL;
-                            
+
                             // Send the info if is not the game master
                             if (playerIndex == 0) {
                                 printf("%s\nYou used the KNIFE, and killed %s!%s", colorsCodes[MAGENTA], players[i] -> playerName, colorsCodes[DEFAULT_COLOR]);
@@ -1934,12 +1939,13 @@ static void useObject(int playerIndex, int currentTurn) {
                 }
 
 
-                return;            
-            
+                return;
+            }
+
             case 9:
                 // Use the TRANQUILLIZER object to increase the mental health by 40
                 players[playerIndex] -> mentalHealth += 40;
-                players[playerIndex] -> backpack[choice - 1] = EMPTY_SLOT;         
+                players[playerIndex] -> backpack[choice - 1] = EMPTY_SLOT;
                 // Send the info if is not the game master
                 if (playerIndex == 0) {
                     printf("%s\nYou used the TRANQUILLIZER, and your mental health has increased to %d!%s",  colorsCodes[MAGENTA], players[playerIndex] -> mentalHealth, colorsCodes[DEFAULT_COLOR]);
@@ -1952,7 +1958,7 @@ static void useObject(int playerIndex, int currentTurn) {
                     }
                     free(info);
                 }
-                return;   
+                return;
 
             default:
                 // Send the info if is not the game master
@@ -1988,7 +1994,7 @@ static void useObject(int playerIndex, int currentTurn) {
                     if (!sendData(playerIndex, tempInfo)) {
                         printf("\nError while sending the advice!");
                     }
-                    
+
                     free(tempInfo);
 
                     // Wait the user to continue
@@ -1997,7 +2003,7 @@ static void useObject(int playerIndex, int currentTurn) {
 
                 break;
         }
-    
+
     } while (TRUE);
 
     return;
@@ -2025,13 +2031,13 @@ static void giveObjects(int playerIndex, int currentTurn) {
         // Send the info if is not the game master
         if (playerIndex == 0) {
             // Regex to clear the terminal.
-            printf("\e[1;1H\e[2J");
+            printf("\033[1;1H\033[2J");
             printf("\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR]);
             printColored("\n------------- GIVABLE OBJECTS -------------\n", MAGENTA);
 
         } else {
             char* info = (char*) malloc(250);
-            int size = sprintf(info, "\e[1;1H\e[2J\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n\n------------- GIVABLE OBJECTS -------------\n%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR]);
+            int size = sprintf(info, "\033[1;1H\033[2J\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n\n------------- GIVABLE OBJECTS -------------\n%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR]);
             info = (char*) realloc(info, size + 1);
             if (!sendData(playerIndex, info)) {
                 printf("\nError while sending the info!");
@@ -2059,7 +2065,7 @@ static void giveObjects(int playerIndex, int currentTurn) {
 
         int choice;
 
-        if (!playerIndex) {        
+        if (!playerIndex) {
             // Add an option to exit the menu
             printf("\n5) Exit the menu.");
             printf("\nChoose from the option above: ");
@@ -2105,7 +2111,7 @@ static void giveObjects(int playerIndex, int currentTurn) {
                     printf("\nError while sending the info!");
                 }
                 free(info);
-                
+
                 // Ask to confirm
                 char* tempInfo = (char*) malloc(150);
                 int tempInfoSize = sprintf(tempInfo, "\n%sPress ENTER to continue: %s", colorsCodes[YELLOW], colorsCodes[DEFAULT_COLOR]);
@@ -2121,8 +2127,8 @@ static void giveObjects(int playerIndex, int currentTurn) {
             }
 
             continue;
-        } 
-        
+        }
+
         unsigned char selectedObject = players[playerIndex] -> backpack[choice  - 1];
 
         if (choice == 5) {
@@ -2180,13 +2186,13 @@ static void giveObjects(int playerIndex, int currentTurn) {
                 // Send the info if is not the game master
                 if (playerIndex == 0) {
                     // Regex to clear the terminal.
-                    printf("\e[1;1H\e[2J");
+                    printf("\033[1;1H\033[2J");
                     printf("\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR]);
                     printColored("\n------------- AVAILABLE PLAYERS -------------\n", MAGENTA);
 
                 } else {
                     char* info = (char*) malloc(350);
-                    int size = sprintf(info, "\e[1;1H\e[2J\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n\n------------- AVAILABLE PLAYERS -------------\n%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR]);
+                    int size = sprintf(info, "\033[1;1H\033[2J\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n\n------------- AVAILABLE PLAYERS -------------\n%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR]);
                     info = (char*) realloc(info, size + 1);
                     if (!sendData(playerIndex, info)) {
                         printf("\nError while sending the info!");
@@ -2220,10 +2226,10 @@ static void giveObjects(int playerIndex, int currentTurn) {
 
                 int option;
 
-                if (!playerIndex) {        
+                if (!playerIndex) {
                     // Add an option to exit the menu
                     printf("\n5) Exit the menu.");
-                    printf("\nChoose from the option above: ");                    
+                    printf("\nChoose from the option above: ");
                     scanf("%d", &option);
 
                 } else {
@@ -2282,9 +2288,9 @@ static void giveObjects(int playerIndex, int currentTurn) {
 
                     continue;
                 }
-                
+
                 unsigned char selectedPlayer = availablesPlayers[option - 1];
-                
+
                 if (option == 5) {
                     break;
                 } else if (selectedPlayer != 7) {
@@ -2292,7 +2298,7 @@ static void giveObjects(int playerIndex, int currentTurn) {
                         if ((players[selectedPlayer] -> backpack[index]) == EMPTY_SLOT) {
                             players[selectedPlayer] -> backpack[index] = selectedObject;
                             players[playerIndex] -> backpack[choice  - 1] = EMPTY_SLOT;
-                            
+
                             // Send the info if is not the game master
                             if (playerIndex == 0) {
                                 printf("%s\nYou gave the %s to %s%s", colorsCodes[MAGENTA], objectsNames[selectedObject], players[selectedPlayer] -> playerName, colorsCodes[DEFAULT_COLOR]);
@@ -2308,7 +2314,7 @@ static void giveObjects(int playerIndex, int currentTurn) {
                             return;
                         }
                     }
-                    
+
                     // Send the info if is not the game master
                     if (playerIndex == 0) {
                         printColored("\nThe selected player hasn't empty slots!", YELLOW);
@@ -2406,13 +2412,13 @@ static void removeObject(int playerIndex, int currentTurn) {
         // Send the info if is not the game master
         if (playerIndex == 0) {
             // Regex to clear the terminal.
-            printf("\e[1;1H\e[2J");
+            printf("\033[1;1H\033[2J");
             printf("\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR]);
             printColored("\n------------- REMOVABLE OBJECTS -------------\n", MAGENTA);
 
         } else {
             char* info = (char*) malloc(250);
-            int size = sprintf(info, "\e[1;1H\e[2J\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n\n------------- REMOVABLE OBJECTS -------------\n%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR]);
+            int size = sprintf(info, "\033[1;1H\033[2J\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n\n------------- REMOVABLE OBJECTS -------------\n%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR]);
             info = (char*) realloc(info, size + 1);
             if (!sendData(playerIndex, info)) {
                 printf("\nError while sending the info!");
@@ -2440,10 +2446,10 @@ static void removeObject(int playerIndex, int currentTurn) {
 
         int choice;
 
-        if (!playerIndex) {        
+        if (!playerIndex) {
             // Add an option to exit the menu
             printf("\n5) Exit the menu.");
-            printf("\nChoose from the option above: ");            
+            printf("\nChoose from the option above: ");
             scanf("%d", &choice);
         } else {
             // Ask to confirm
@@ -2502,8 +2508,8 @@ static void removeObject(int playerIndex, int currentTurn) {
                 requestInput(playerIndex);
             }
             continue;
-        } 
-        
+        }
+
         unsigned char selectedObject = players[playerIndex] -> backpack[choice  - 1];
 
         if (choice == 5) {
@@ -2553,10 +2559,10 @@ static void removeObject(int playerIndex, int currentTurn) {
                 }
                 continue;
             }
-            
+
             // Remove the object
             players[playerIndex] -> backpack[choice - 1] = EMPTY_SLOT;
-            
+
             // Send the info if is not the game master
             if (playerIndex == 0) {
                 printf("%s\nYou have removed the %s from the backpack!%s", colorsCodes[MAGENTA], objectsNames[players[playerIndex] -> backpack[choice - 1]], colorsCodes[DEFAULT_COLOR]);
@@ -2573,24 +2579,24 @@ static void removeObject(int playerIndex, int currentTurn) {
         }
 
     } while (TRUE);
-    
+
     return;
 }
 
 static void reorginizeBackpack(int playerIndex, int currentTurn) {
     do {
         int emptySlots = 0;
-        
+
         // Send the info if is not the game master
         if (playerIndex == 0) {
             // Regex to clear the terminal.
-            printf("\e[1;1H\e[2J");
+            printf("\033[1;1H\033[2J");
             printf("\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR]);
             printColored("\n------------- BACKPACK SLOTS -------------\n", MAGENTA);
 
         } else {
             char* info = (char*) malloc(250);
-            int size = sprintf(info, "\e[1;1H\e[2J\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n\n------------- BACKPACK SLOTS -------------\n%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR]);
+            int size = sprintf(info, "\033[1;1H\033[2J\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n\n------------- BACKPACK SLOTS -------------\n%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR]);
             info = (char*) realloc(info, size + 1);
             if (!sendData(playerIndex, info)) {
                 printf("\nError while sending the info!");
@@ -2605,7 +2611,7 @@ static void reorginizeBackpack(int playerIndex, int currentTurn) {
             if (slot == EMPTY_SLOT) {
                 emptySlots++;
             }
-            
+
             // Send the info if is not the game master
             if (playerIndex == 0) {
                 printf("\n%d) %s;", i + 1, objectsNames[slot]);
@@ -2639,10 +2645,10 @@ static void reorginizeBackpack(int playerIndex, int currentTurn) {
 
         int choice;
 
-        if (!playerIndex) {        
+        if (!playerIndex) {
             // Add an option to exit the menu
             printf("\n5) Exit the menu.");
-            printf("\nInsert the number of the slot to swap: ");            
+            printf("\nInsert the number of the slot to swap: ");
             scanf("%d", &choice);
         } else {
             // Ask to confirm
@@ -2714,20 +2720,20 @@ static void reorginizeBackpack(int playerIndex, int currentTurn) {
             // Send the info if is not the game master
             if (playerIndex == 0) {
                 // Regex to clear the terminal.
-                printf("\e[1;1H\e[2J");
+                printf("\033[1;1H\033[2J");
                 printf("\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR]);
                 printColored("\n------------- BACKPACK SLOTS -------------\n", MAGENTA);
 
             } else {
                 char* info = (char*) malloc(250);
-                int size = sprintf(info, "\e[1;1H\e[2J\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n\n------------- BACKPACK SLOTS -------------\n%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR]);
+                int size = sprintf(info, "\033[1;1H\033[2J\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n\n------------- BACKPACK SLOTS -------------\n%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR]);
                 info = (char*) realloc(info, size + 1);
                 if (!sendData(playerIndex, info)) {
                     printf("\nError while sending the info!");
                 }
                 free(info);
             }
-            
+
             // Show all the object in the backpack except the one selected before
             for (int i = 0; i < 4; i++) {
                 if (i == (choice - 1)) {
@@ -2750,7 +2756,7 @@ static void reorginizeBackpack(int playerIndex, int currentTurn) {
 
             int option;
 
-            if (!playerIndex) {        
+            if (!playerIndex) {
                 // Add an option to exit the menu
                 printf("\n5) Exit the menu.");
                 printf("\nInsert the number of the slot to swap with the %s: ", objectsNames[slotToSwap]);
@@ -2822,11 +2828,11 @@ static void reorginizeBackpack(int playerIndex, int currentTurn) {
             }
 
             // Swap the selected slots
-            unsigned char selectedSlot = players[playerIndex] -> backpack[option - 1]; 
+            unsigned char selectedSlot = players[playerIndex] -> backpack[option - 1];
             players[playerIndex] -> backpack[choice - 1] = selectedSlot;
             players[playerIndex] -> backpack[option - 1] = slotToSwap;
 
-                        
+
             // Send the info if is not the game master
             if (playerIndex == 0) {
                 printf("%s\nSwapped the %s with the %s!%s", colorsCodes[MAGENTA], objectsNames[slotToSwap], objectsNames[selectedSlot], colorsCodes[DEFAULT_COLOR]);
@@ -2864,7 +2870,7 @@ static int randomNumber(int range) {
     return (rand() % range);
 }
 
-static void generateTurns() {
+static void generateTurns(void) {
     // Check if the turns array has been already used
     if (turns != NULL) {
         free(turns);
@@ -2878,7 +2884,7 @@ static void generateTurns() {
     for (int i = 0; i < playerCount; i++) {
         // Generate a random number
         int randomNum = randomNumber(playerCount);
-        
+
         for (int l = 0; l < i; l++) {
             // If the generated number is already in the array, regenerate a new one and check it
             if (turns[l] == randomNum) {
@@ -2889,14 +2895,14 @@ static void generateTurns() {
                 randomNum = randomNumber(playerCount);
             }
         }
-        
+
         turns[i] = randomNum;
     }
 
     return;
 }
 
-static void checkGameStatus() {
+static void checkGameStatus(void) {
     // If all the three different type of evidence has been collected, then the players win
     if ((caravanEvidence[0] != NO_EVIDENCE) && (caravanEvidence[1] != NO_EVIDENCE) && (caravanEvidence[2] != NO_EVIDENCE)) {
         gameState = WIN;
@@ -2912,7 +2918,7 @@ static void checkGameStatus() {
 
             if (i == 0) {
                 printColored("\nYou have been eliminated because your mental health is less than 0!", RED);
-                
+
                 {
                     // Clean the stdin
                     char c;
@@ -2949,7 +2955,7 @@ static void checkGameStatus() {
 
             // Wait the user to continue
             requestInput(i);
-        
+
         }
 
         // Increment the counter for each player that has been eliminated
@@ -2971,10 +2977,10 @@ static char* printObjectsInfo(unsigned char objects[]) {
     unsigned char duplicates[] = {0, 0, 0, 0};
     int duplicateCount = 0;
     int isDuplicated;
-    
+
     for (int index = 0; index < 4; index++) {
         // Skip the object if it's not valid
-        if ((4 > objects[index]) && (objects[index] > 9)) {
+        if ((4 < objects[index]) && (objects[index] > 9)) {
             continue;
         }
 
@@ -3023,13 +3029,13 @@ static void printEvidenceCollected(int playerIndex, int currentTurn) {
     // Send the info if is not the game master
     if (playerIndex == 0) {
         // Regex to clear the terminal.
-        printf("\e[1;1H\e[2J");
+        printf("\033[1;1H\033[2J");
         printf("\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR]);
         printColored("\n------------- EVIDENCE COLLECTED IN THE CARAVAN -------------\n", MAGENTA);
 
     } else {
         char* info = (char*) malloc(250);
-        int size = sprintf(info, "\e[1;1H\e[2J\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n\n------------- EVIDENCE COLLECTED IN THE CARAVAN -------------\n%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR]);
+        int size = sprintf(info, "\033[1;1H\033[2J\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n\n------------- EVIDENCE COLLECTED IN THE CARAVAN -------------\n%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR]);
         info = (char*) realloc(info, size + 1);
         if (!sendData(playerIndex, info)) {
             printf("\nError while sending the info!");
@@ -3052,7 +3058,7 @@ static void printEvidenceCollected(int playerIndex, int currentTurn) {
             free(info);
         }
     }
-    
+
     return;
 }
 
@@ -3060,15 +3066,15 @@ static void printGhostInfo(int playerIndex, int currentTurn) {
     // Send the info if is not the game master
     if (playerIndex == 0) {
         // Regex to clear the terminal.
-        printf("\e[1;1H\e[2J");
+        printf("\033[1;1H\033[2J");
         printf("\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n%s", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR]);
         printColored("\n------------- GHOST INFO -------------", MAGENTA);
         printf("\nGhost position: %s", zoneTypeNames[ghostPosition]);
-        printf("\nGhost appeareance probability: %d%%", ghostAppearance);        
+        printf("\nGhost appeareance probability: %d%%", ghostAppearance);
 
     } else {
         char* info = (char*) malloc(250);
-        int size = sprintf(info, "\e[1;1H\e[2J\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n\n------------- GHOST INFO -------------\n%s\nGhost position: %s\nGhost appeareance probability: %d%%", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR], zoneTypeNames[ghostPosition], ghostAppearance);
+        int size = sprintf(info, "\033[1;1H\033[2J\n%sROUND: %d - TURN: %d - CURRENTLY PLAYING: %s\n\n------------- GHOST INFO -------------\n%s\nGhost position: %s\nGhost appeareance probability: %d%%", colorsCodes[MAGENTA], (roundCount + 1), (currentTurn + 1), players[playerIndex] -> playerName, colorsCodes[DEFAULT_COLOR], zoneTypeNames[ghostPosition], ghostAppearance);
         info = (char*) realloc(info, size + 1);
         if (!sendData(playerIndex, info)) {
             printf("\nError while sending the info!");
@@ -3094,11 +3100,11 @@ static char* printAdvices(int playerIndex) {
         unsigned char slot = player -> backpack[i];
         if ((slot >= 11) && (slot != EMPTY_SLOT)) {
             currentLen = sprintf(temp, "ADVICE: Deposit the evidence in the caravan! (Type 1)");
-            temp = (char*) realloc(temp, currentLen + 1);            
+            temp = (char*) realloc(temp, currentLen + 1);
             return temp;
         }
-    }    
-    
+    }
+
     // Check if there's an evidence to pick
     for (int i = 0; i < 4; i++) {
         unsigned char slot = (player -> backpack[i]) + 10;
@@ -3108,8 +3114,8 @@ static char* printAdvices(int playerIndex) {
             temp = (char*) realloc(temp, currentLen + 1);
             return temp;
         }
-    }    
-    
+    }
+
     // Check if the player have an object to use
     for (int i = 0; i < 4; i++) {
         unsigned char slot = player -> backpack[i];
@@ -3118,8 +3124,8 @@ static char* printAdvices(int playerIndex) {
             temp = (char*) realloc(temp, currentLen + 1);
             return temp;
         }
-    }    
-    
+    }
+
     // Check if there's an object to pick
     for (int i = 0; i < 4; i++) {
         unsigned char currentZoneObject = player -> position -> zoneObject;
@@ -3128,8 +3134,8 @@ static char* printAdvices(int playerIndex) {
             temp = (char*) realloc(temp, currentLen + 1);
             return temp;
         }
-    }    
-    
+    }
+
     // Before checking if is better skip the turn, check if there's more than one player
     if (playerCount > 1) {
         // Check if there's a player in the same zone that has the object to pick the evidence from the current zone

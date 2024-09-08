@@ -1,10 +1,6 @@
 //NOTE: This file contains all the functions needed to perform utility functions.
-
-#pragma once
-
 #ifndef _UTILS_H
 #define _UTILS_H
-#endif
 
 #define TRUE 1
 #define FALSE 0
@@ -46,24 +42,26 @@ typedef struct dataReceived {
     struct dataReceived* next;
 } dataReceived;
 
-/// @brief Set the game. 
+/// @brief Set the game.
 void set(int playerNum);
 
 /// @brief Set the player at the given index.
 /// @param playerIndex
-/// @param info 
+/// @param info
 void setPlayers(int playerIndex, char* info);
 
 /// @brief Return the current settings.
-/// @param response 
+/// @param response
 /// @return Return the game settings.
-char* showGameSettings();
+char* showGameSettings(void);
 
 /// @brief Start the game.
-void playGame();
+void playGame(void);
 
 /// @brief Reset the data.
-void resetData();
+void resetData(void);
 
 /// @brief Close the game by deallocating all the memory from the heap.
-void close();
+void close_game(void);
+
+#endif //_UTILS_H_

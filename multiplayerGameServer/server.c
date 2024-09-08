@@ -6,6 +6,7 @@
 #include <pthread.h>
 #include <sys/ioctl.h>
 #include <net/if.h>
+#include <unistd.h>
 #include "server.h"
 #include "utils.h"
 
@@ -27,11 +28,11 @@ static int threadState = ACTIVE;
 /* ------------------------------------------------------------------- */
 
 /// @brief Initialize the server.
-/// @param server 
-/// @param port 
-/// @param backlog 
+/// @param server
+/// @param port
+/// @param backlog
 /// @return Return the status of the initialization.
-static bool initServer(sockaddr_in server, u_short port, int backlog) {
+static bool initServer(sockaddr_in server, unsigned short port, int backlog) {
 	// Create a socket and check if fails creating it
 	if ((server_socket = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET) {
 		printf("Could not create socket!\n");
@@ -42,7 +43,7 @@ static bool initServer(sockaddr_in server, u_short port, int backlog) {
 	server.sin_family = AF_INET;
 	server.sin_addr.s_addr = htonl(INADDR_ANY);
 	server.sin_port = htons(port);
-	
+
 	// Bind the socket and check if fails binding it
 	if (bind(server_socket, (struct sockaddr*) &server, sizeof(server)) < 0) {
 		printf("\nBind failed with error code!\n");
@@ -56,25 +57,26 @@ static bool initServer(sockaddr_in server, u_short port, int backlog) {
 }
 
 /// @brief Ask the user if he wants to end the search of players.
-static void askToClose() {
+static void askToClose(void) {
 	char confirm;
 	printf("\n\nDo you want to end the search? (Y/N): ");
 	scanf("%c", &confirm);
 
-	{	
+	{
 		// Clean the stdin
 		char c;
 		while((c = getc(stdin)) != EOF) {
 			if(c == '\n') {
-				break;          
+				break;
 			}
-		}  
+		}
 	}
 
 	if (confirm == 'Y') {
 		searchConnectionsStatus = END;
 	} else if (confirm != 'N') {
-		return askToClose();
+		askToClose();
+		return;
 	}
 
 	return;
@@ -99,7 +101,7 @@ bool sendData(int clientIndex, char* message) {
 	return TRUE;
 }
 
-int getDataReceivedLen() {
+int getDataReceivedLen(void) {
 	dataReceived* scan = firstDataCollected;
 	int dataCollectedNum = 0;
 
@@ -112,11 +114,11 @@ int getDataReceivedLen() {
 	return dataCollectedNum;
 }
 
-dataReceived getDataReceived() {
+dataReceived getDataReceived(void) {
 	// Check if there's something to retrive
 	if (firstDataCollected == NULL) {
 		// Return the data requested
-		dataReceived dataRequested = {NULL, 0, -1};
+		dataReceived dataRequested = {NULL, 0, -1, NULL};
 		return dataRequested;
 	}
 
@@ -131,7 +133,7 @@ dataReceived getDataReceived() {
 		firstDataCollected = NULL;
 		lastDataCollected = NULL;
 		// Return the data requested
-		dataReceived dataRequested = {dataContainer, dataLen, clientId};
+		dataReceived dataRequested = {dataContainer, dataLen, clientId, NULL};
 		return dataRequested;
 	}
 
@@ -145,7 +147,7 @@ dataReceived getDataReceived() {
     free(temp);
 
 	// Return the data requested
-	dataReceived dataRequested = {dataContainer, dataLen, clientId};
+	dataReceived dataRequested = {dataContainer, dataLen, clientId, NULL};
 	return dataRequested;
 }
 
@@ -157,7 +159,7 @@ static void saveDataReceived(char* dataRecv, int dataLen, int clientId) {
 	newData -> length = dataLen + 1;
 
 	// Set the given string in the data collection
-	newData -> data = dataRecv; 
+	newData -> data = dataRecv;
 
 	newData -> clientId = clientId;
 
@@ -174,7 +176,7 @@ static void saveDataReceived(char* dataRecv, int dataLen, int clientId) {
 
 		// Set the last element as the next one
 		firstDataCollected -> next = lastDataCollected;
-		
+
 		return;
 	}
 
@@ -203,7 +205,7 @@ void* receiveData(void* vargp) {
 		printf("\nFailed receiving the data from the client %d!\n", clientId + 1);
 		pthread_exit(NULL);
 		return receiveData(vargp);
-	} else {	
+	} else {
 		response = (char*) realloc(response, strlen(response) + 1);
 
 		// Save the data received
@@ -214,7 +216,7 @@ void* receiveData(void* vargp) {
 	return receiveData(vargp);
 }
 
-int loadServer() {
+int loadServer(void) {
 	// Initialize the server
 	if (!initServer(server_addr, 8080, 3)) {
 		printf("\nError: failed initializing the server!");
@@ -223,19 +225,19 @@ int loadServer() {
 
 	return TRUE;
 
-} 
+}
 
-int createServerList() {
+int createServerList(void) {
 	int client;
 	sockaddr_in client_addr;
 	int c = sizeof(client_addr);
 
 	// Regex to clear the terminal.
-    printf("\e[1;1H\e[2J");
+    printf("\033[1;1H\033[2J");
 	printf("\nWaiting the first user to connect...\n");
-	
+
 	// Wait till the number of the user connected is reached
-	do {	
+	do {
 		// Check if the connection is made by an invalid socket.
 		while ((client = accept(server_socket, (struct sockaddr*) &client_addr, (socklen_t*) &c)) != INVALID_SOCKET) {
 			// Add the client to the list
@@ -248,7 +250,7 @@ int createServerList() {
 		}
 
 		// Regex to clear the terminal.
-		printf("\e[1;1H\e[2J");
+		printf("\033[1;1H\033[2J");
 
 		printf("\n-------------------- USERS CONNECTED --------------------\n");
 
@@ -264,7 +266,7 @@ int createServerList() {
 	return clientsCount;
 }
 
-void closeServer() {
+void closeServer(void) {
 	printf("\nClosing the server!");
 	close(server_socket);
 	return;

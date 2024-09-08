@@ -5,7 +5,7 @@
 #include "server.h"
 #include "utils.h"
 
-int startGame() {
+int startGame(void) {
     // Load the server
     if(!loadServer()) {
         printf("\nError loading the server!");
@@ -38,9 +38,9 @@ int startGame() {
             printf("\nError sending the game settings!");
             return FALSE;
         }
-        
+
         // Regex to clear the terminal.
-        printf("\e[1;1H\e[2J");
+        printf("\033[1;1H\033[2J");
 
         printf("\nWaiting to receive the player data...\n");
 
@@ -54,13 +54,13 @@ int startGame() {
         free(playerData);
 
     }
-    
+
     // Send the current game settings
     char* gameSettings = (char*) malloc(2500);
     char* tempInfo = showGameSettings();
 
     // Regex to clear the terminal.
-    int currentLen = sprintf(gameSettings, "\e[1;1H\e[2J%s\x1b[1;33m\n\nWait the game master to start the game...\x1b[1;0m", tempInfo);
+    int currentLen = sprintf(gameSettings, "\033[1;1H\033[2J%s\x1b[1;33m\n\nWait the game master to start the game...\x1b[1;0m", tempInfo);
     gameSettings = (char*) realloc(gameSettings, currentLen + 1);
 
     for (int i = 0; i < totalPlayers; i++) {
@@ -74,7 +74,7 @@ int startGame() {
 
     free(tempInfo);
     free(gameSettings);
-    
+
     {
         char confirm;
         printf("\x1b[1;33m\n\nPress ENTER to continue: \x1b[1;0m");
