@@ -1,11 +1,6 @@
 //NOTE: This file contains all the functions needed to perform utility functions.
-
-#pragma once
-
 #ifndef _UTILS_H
 #define _UTILS_H
-#endif
-
 
 #define TRUE 1
 #define FALSE 0
@@ -28,8 +23,9 @@ typedef struct dataReceived {
 } dataReceived;
 
 /// @brief Set the player and send the generated data to the server.
-void setPlayer();
+void setPlayer(void);
 
 /// @brief Play your turn.
-void playTurn();
+void playTurn(void);
 
+#endif //_UTILS_H
